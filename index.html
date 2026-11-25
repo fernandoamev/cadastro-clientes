@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Cadastro de Clientes</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <main>
+    <h1>Cadastro de Clientes</h1>
+
+    <form id="formCliente">
+      <input type="text" id="nome_completo" placeholder="Nome Completo" required>
+      <input type="text" id="telefone" placeholder="Telefone / WhatsApp" required>
+      <input type="email" id="email" placeholder="E-mail" required>
+      <input type="date" id="data_nascimento" required>
+
+      <select id="categoria" required>
+        <option value="">Selecione a Categoria...</option>
+        <option value="Básico">Básico</option>
+        <option value="VIP">VIP</option>
+      </select>
+
+      <div class="linha">
+        <label><input type="radio" name="tipo_cliente" value="Pessoa Física" required> Pessoa Física</label>
+        <label><input type="radio" name="tipo_cliente" value="Pessoa Jurídica" required> Pessoa Jurídica</label>
+      </div>
+
+      <label class="linha">
+        <input type="checkbox" id="aceite_termos" required> Aceito os termos comerciais
+      </label>
+
+      <button type="submit">Salvar Cliente</button>
+      <p id="status"></p>
+    </form>
+
+    <h2>Clientes Cadastrados</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nome</th>
+          <th>E-mail</th>
+          <th>Categoria</th>
+        </tr>
+      </thead>
+      <tbody id="tabela"></tbody>
+    </table>
+  </main>
+
+  <script>
+    const db = supabase.createClient(
+      'https://wdqyyrauzokxrnzoiixq.supabase.co',
+      'COLE_SUA_CHAVE_ANON_AQUI'
+    );
+
+    const form = document.getElementById('formCliente');
+    const tabela = document.getElementById('tabela');
+    const status = document.getElementById('status');
+
+    async function carregar() {
+      const { data, error } = await db.from('clientes').select('*').order('id', { ascending: false });
+      if (error) return tabela.innerHTML = `<tr><td colspan="4">Erro: ${error.message}</td></tr>`;
+
+      tabela.innerHTML = data.map(c => `
+        <tr>
+          <td>${c.id}</td>
+          <td>${c.nome_completo}</td>
+          <td>${c.email}</td>
+          <td>${c.categoria}</td>
+        </tr>
+      `).join('');
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const { error } = await db.from('clientes').insert([{
+        nome_completo: document.getElementById('nome_completo').value,
+        telefone: document.getElementById('telefone').value,
+        email: document.getElementById('email').value,
+        data_nascimento: document.getElementById('data_nascimento').value,
+        categoria: document.getElementById('categoria').value,
+        tipo_cliente: document.querySelector('input[name="tipo_cliente"]:checked').value,
+        aceite_termos: document.getElementById('aceite_termos').checked
+      }]);
+
+      if (error) {
+        status.textContent = `Erro: ${error.message}`;
+      } else {
+        status.textContent = 'Salvo com sucesso!';
+        form.reset();
+        carregar();
+      }
+    });
+
+    carregar();
+  </script>
+
+</body>
+</html>
