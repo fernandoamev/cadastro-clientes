@@ -1,1 +1,67 @@
+* {
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
 
+body {
+  background: #0f172a;
+  color: #f8fafc;
+  padding: 20px;
+}
+
+main {
+  max-width: 600px;
+  margin: 0 auto;
+  background: #1e293b;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+h1, h2 {
+  color: #10b981;
+  margin-bottom: 12px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+input[type="text"], input[type="email"], input[type="date"], select {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #475569;
+  background: #0f172a;
+  color: #fff;
+}
+
+.linha {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+button {
+  padding: 12px;
+  background: #10b981;
+  color: #0f172a;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+th, td {
+  padding: 8px;
+  border-bottom: 1px solid #334155;
+  text-align: left;
+}
